@@ -13,9 +13,20 @@ export type WorkflowStatus =
 
 export type WorkflowStep = 
   | 'rfq_received'
+  | 'technical_qualification_pending'
+  | 'technical_qualification_completed'
+  | 'assigned_to_purchase'
+  | 'vendor_rfq_created'
+  | 'vendor_rfq_sent'
+  | 'vendor_quotes_received'
+  | 'rate_analysis_started'
+  | 'rate_analysis_completed'
+  | 'pricing_calculation_done'
+  | 'pricing_approval_pending'
+  | 'pricing_approved'
   | 'quote_prepared'
-  | 'quote_sent'
-  | 'quote_accepted'
+  | 'quote_sent_to_customer'
+  | 'quote_accepted_by_customer'
   | 'sales_order_created'
   | 'stock_checked'
   | 'stock_available'
@@ -42,6 +53,11 @@ export type WorkflowStep =
 
 export interface WorkflowContext {
   rfqId?: string;
+  technicalQualificationId?: string;
+  vendorRfqIds?: string[];
+  vendorQuoteIds?: string[];
+  rateAnalysisId?: string;
+  salesPricingId?: string;
   quoteId?: string;
   salesOrderId?: string;
   purchaseRequisitionId?: string;
@@ -55,6 +71,14 @@ export interface WorkflowContext {
   
   customerId: string;
   items: WorkflowItem[];
+  
+  // Enhanced workflow data
+  technicalQualification?: TechnicalQualification;
+  vendorRfqs?: VendorRFQ[];
+  vendorQuotes?: VendorQuote[];
+  rateAnalysis?: RateAnalysis;
+  salesPricing?: SalesPricing;
+  approvalRequests?: ApprovalRequest[];
   
   // Stock check results
   stockCheckResults?: StockCheckResult[];
@@ -85,6 +109,12 @@ export interface WorkflowItem {
   discountPercent?: number;
   taxRate: number;
   
+  // Product code traceability
+  clientProductCode?: string;  // Customer's part number
+  clientProductName?: string;  // Customer's product name
+  ourProductCode?: string;     // Our SKU/part number
+  vendorProductCode?: string;  // Vendor's part number (after sourcing)
+  
   // Stock details
   availableStock?: number;
   quantityToOrder?: number;
@@ -97,6 +127,11 @@ export interface WorkflowItem {
   // Lot tracking
   lotNumber?: string;
   batchNumber?: string;
+  
+  // Vendor details (multiple vendors per product support)
+  selectedVendorId?: string;
+  selectedVendorCode?: string;
+  selectedVendorPrice?: number;
 }
 
 export interface StockCheckResult {
@@ -147,6 +182,9 @@ export interface WorkflowOptions {
   // Automatic approvals
   autoApproveQuote?: boolean;
   autoApprovePO?: boolean;
+  autoApproveTechnicalQualification?: boolean;
+  autoApproveRateAnalysis?: boolean;
+  autoApprovePricing?: boolean;
   
   // Stock behavior
   createPOOnStockShortfall?: boolean;
@@ -159,9 +197,26 @@ export interface WorkflowOptions {
   // Invoice behavior
   autoGenerateInvoice?: boolean;
   
+  // Vendor RFQ behavior
+  sendToMultipleVendors?: boolean;
+  minimumVendorQuotes?: number;
+  maxVendorQuoteWaitDays?: number;
+  
+  // Rate analysis
+  enableAutomaticScoring?: boolean;
+  priceWeightage?: number;
+  qualityWeightage?: number;
+  deliveryWeightage?: number;
+  paymentTermsWeightage?: number;
+  
+  // Pricing
+  defaultMarginPercent?: number;
+  requireManagementApprovalAboveMargin?: number;
+  
   // Notification settings
   notifyOnEachStep?: boolean;
   notifyOnError?: boolean;
+  notifyOnApprovalRequired?: boolean;
   
   // Retry settings
   maxRetries?: number;
@@ -219,4 +274,182 @@ export interface EdgeCaseHandler {
   handle: (context: WorkflowContext) => Promise<WorkflowResult>;
   canRecover: boolean;
   requiresManualIntervention: boolean;
+}
+
+// ========================================
+// ENHANCED WORKFLOW TYPES
+// ========================================
+
+export interface TechnicalQualification {
+  id: string;
+  rfqId: string;
+  status: 'pending' | 'under_review' | 'qualified' | 'rejected' | 'more_info_needed';
+  qualifiedBy?: string;
+  technicalNotes?: string;
+  specificationsReviewed: boolean;
+  feasibilityConfirmed: boolean;
+  specialRequirements?: string;
+  estimatedDeliveryDays?: number;
+  rejectionReason?: string;
+}
+
+export interface VendorRFQ {
+  id: string;
+  vendorRfqNumber: string;
+  customerRfqId: string;
+  supplierId: string;
+  purchaseHandlerId?: string;
+  status: 'draft' | 'sent_to_vendor' | 'acknowledged' | 'quoted' | 'rejected' | 'expired';
+  items: VendorRFQItem[];
+}
+
+export interface VendorRFQItem {
+  id: string;
+  vendorRfqId: string;
+  customerRfqItemId?: string;
+  productId: string;
+  productDescription: string;
+  quantity: number;
+  uom: string;
+  requiredByDate?: string;
+  technicalSpecs?: any;
+}
+
+export interface VendorQuote {
+  id: string;
+  vendorQuoteNumber: string;
+  vendorRfqId: string;
+  supplierId: string;
+  quoteDate: string;
+  validUntil?: string;
+  subtotal: number;
+  taxAmount: number;
+  freightCharges: number;
+  totalAmount: number;
+  paymentTerms?: string;
+  deliveryTerms?: string;
+  leadTimeDays?: number;
+  items: VendorQuoteItem[];
+}
+
+export interface VendorQuoteItem {
+  id: string;
+  vendorQuoteId: string;
+  vendorRfqItemId?: string;
+  productId: string;
+  productName: string;
+  quantity: number;
+  uom: string;
+  unitPrice: number;
+  discountPercent: number;
+  taxRate: number;
+  lineTotal: number;
+  leadTimeDays?: number;
+  brandOffered?: string;
+  specificationsMet: boolean;
+}
+
+export interface RateAnalysis {
+  id: string;
+  customerRfqId: string;
+  analysisNumber: string;
+  status: 'pending' | 'in_progress' | 'completed' | 'approved';
+  analyzedBy?: string;
+  priceWeightage: number;
+  qualityWeightage: number;
+  deliveryWeightage: number;
+  paymentTermsWeightage: number;
+  items: RateAnalysisItem[];
+  recommendations?: string;
+}
+
+export interface RateAnalysisItem {
+  id: string;
+  rateAnalysisId: string;
+  customerRfqItemId: string;
+  productId: string;
+  productName: string;
+  quantity: number;
+  recommendedVendorId?: string;
+  recommendedUnitPrice?: number;
+  recommendedTotalPrice?: number;
+  recommendationReason?: string;
+  overridden: boolean;
+  overrideVendorId?: string;
+  overrideUnitPrice?: number;
+  overrideTotalPrice?: number;
+  overrideReason?: string;
+  selectedVendorId?: string;
+  selectedUnitPrice?: number;
+  selectedTotalPrice?: number;
+  scores?: VendorQuoteScore[];
+}
+
+export interface VendorQuoteScore {
+  id: string;
+  rateAnalysisItemId: string;
+  vendorQuoteItemId: string;
+  supplierId: string;
+  priceScore: number;
+  qualityScore: number;
+  deliveryScore: number;
+  paymentTermsScore: number;
+  totalWeightedScore: number;
+  rank: number;
+}
+
+export interface SalesPricing {
+  id: string;
+  customerRfqId: string;
+  rateAnalysisId?: string;
+  pricingNumber: string;
+  status: 'pending_approval' | 'approved' | 'rejected' | 'revision_required';
+  totalPurchaseCost: number;
+  freightCost: number;
+  handlingCost: number;
+  otherCosts: number;
+  totalCost: number;
+  targetMarginPercent?: number;
+  approvedMarginPercent?: number;
+  salesPrice?: number;
+  submittedBy?: string;
+  approvedBy?: string;
+  items: SalesPricingItem[];
+}
+
+export interface SalesPricingItem {
+  id: string;
+  salesPricingId: string;
+  customerRfqItemId?: string;
+  productId: string;
+  productName: string;
+  quantity: number;
+  uom: string;
+  purchaseUnitCost: number;
+  purchaseTotalCost: number;
+  totalUnitCost: number;
+  totalCost: number;
+  marginPercent: number;
+  marginAmount: number;
+  salesUnitPrice: number;
+  salesTotalPrice: number;
+  taxRate: number;
+  taxAmount: number;
+  finalUnitPrice: number;
+  finalLineTotal: number;
+}
+
+export interface ApprovalRequest {
+  id: string;
+  approvalType: 'technical_qualification' | 'rate_analysis' | 'pricing_approval' | 'quote_approval';
+  referenceType: string;
+  referenceId: string;
+  status: 'pending' | 'approved' | 'rejected' | 'escalated' | 'cancelled';
+  approvalLevel: number;
+  requiredRole?: string;
+  assignedTo?: string;
+  requestedBy?: string;
+  reviewedBy?: string;
+  decision?: string;
+  comments?: string;
 }

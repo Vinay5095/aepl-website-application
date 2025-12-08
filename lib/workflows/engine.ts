@@ -69,7 +69,7 @@ export class WorkflowEngine {
       if (this.options.autoApproveQuote) {
         await this.acceptQuote();
       } else {
-        return this.pauseForApproval('quote_sent', 'Quote sent. Waiting for customer approval.');
+        return this.pauseForApproval('quote_sent_to_customer', 'Quote sent. Waiting for customer approval.');
       }
       
       // Step 4: Create Sales Order
@@ -243,7 +243,7 @@ export class WorkflowEngine {
    * Step 3: Accept Quote
    */
   private async acceptQuote(): Promise<void> {
-    this.currentStep = 'quote_accepted';
+    this.currentStep = 'quote_accepted_by_customer';
     const supabase = await createClient();
 
     try {
@@ -254,10 +254,10 @@ export class WorkflowEngine {
 
       if (error) throw error;
 
-      await this.logActivity('quote_accepted', 'Quote accepted by customer');
+      await this.logActivity('quote_accepted_by_customer', 'Quote accepted by customer');
 
     } catch (error) {
-      throw this.createError('quote_accepted', 'QUOTE_ACCEPT_FAILED', error);
+      throw this.createError('quote_accepted_by_customer', 'QUOTE_ACCEPT_FAILED', error);
     }
   }
 
