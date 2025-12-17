@@ -22,6 +22,7 @@ import slaRoutes from './routes/sla';
 import creditRoutes from './routes/credit';
 import fxRoutes from './routes/fx';
 import taxRoutes from './routes/tax';
+import notificationRoutes from './routes/notification';
 
 // Services
 import { startSlaMonitoringCron } from './services/sla-cron';
@@ -93,6 +94,7 @@ app.use(`/api/${API_VERSION}/sla`, slaRoutes);
 app.use(`/api/${API_VERSION}/credit`, creditRoutes);
 app.use(`/api/${API_VERSION}/fx`, fxRoutes);
 app.use(`/api/${API_VERSION}/tax`, taxRoutes);
+app.use(`/api/${API_VERSION}/notifications`, notificationRoutes);
 
 /**
  * 404 Handler
