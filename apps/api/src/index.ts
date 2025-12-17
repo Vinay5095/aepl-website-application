@@ -19,6 +19,7 @@ import productRoutes from './routes/product';
 import rfqRoutes from './routes/rfq';
 import orderRoutes from './routes/order';
 import slaRoutes from './routes/sla';
+import creditRoutes from './routes/credit';
 
 // Services
 import { startSlaMonitoringCron } from './services/sla-cron';
@@ -87,6 +88,7 @@ app.use(`/api/${API_VERSION}`, productRoutes);
 app.use(`/api/${API_VERSION}/rfq`, rfqRoutes);
 app.use(`/api/${API_VERSION}/orders`, orderRoutes);
 app.use(`/api/${API_VERSION}/sla`, slaRoutes);
+app.use(`/api/${API_VERSION}/credit`, creditRoutes);
 
 /**
  * 404 Handler
