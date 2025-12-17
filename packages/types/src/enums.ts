@@ -1,0 +1,238 @@
+/**
+ * Core enums for Enterprise B2B Trade & Operations OS
+ * Based on README.md and PRD.md specifications
+ */
+
+/**
+ * RFQ Item States - Complete state machine definition
+ */
+export enum RfqItemState {
+  DRAFT = 'DRAFT',
+  RFQ_SUBMITTED = 'RFQ_SUBMITTED',
+  SALES_REVIEW = 'SALES_REVIEW',
+  TECH_REVIEW = 'TECH_REVIEW',
+  TECH_APPROVED = 'TECH_APPROVED',
+  COMPLIANCE_REVIEW = 'COMPLIANCE_REVIEW',
+  STOCK_CHECK = 'STOCK_CHECK',
+  SOURCING_ACTIVE = 'SOURCING_ACTIVE',
+  VENDOR_QUOTES_RECEIVED = 'VENDOR_QUOTES_RECEIVED',
+  RATE_FINALIZED = 'RATE_FINALIZED',
+  MARGIN_APPROVAL = 'MARGIN_APPROVAL',
+  PRICE_FROZEN = 'PRICE_FROZEN',
+  QUOTE_SENT = 'QUOTE_SENT',
+  CUSTOMER_ACCEPTED = 'CUSTOMER_ACCEPTED',
+  CUSTOMER_REJECTED = 'CUSTOMER_REJECTED',
+  RFQ_CLOSED = 'RFQ_CLOSED',
+}
+
+/**
+ * Order Item States - Complete state machine definition
+ */
+export enum OrderItemState {
+  PR_CREATED = 'PR_CREATED',
+  PR_ACKNOWLEDGED = 'PR_ACKNOWLEDGED',
+  CREDIT_CHECK = 'CREDIT_CHECK',
+  CREDIT_HOLD = 'CREDIT_HOLD',
+  PO_RELEASED = 'PO_RELEASED',
+  VENDOR_CONFIRMED = 'VENDOR_CONFIRMED',
+  IN_PRODUCTION = 'IN_PRODUCTION',
+  GOODS_RECEIVED = 'GOODS_RECEIVED',
+  QC_APPROVED = 'QC_APPROVED',
+  QC_REJECTED = 'QC_REJECTED',
+  READY_TO_DISPATCH = 'READY_TO_DISPATCH',
+  DISPATCHED = 'DISPATCHED',
+  DELIVERED = 'DELIVERED',
+  INVOICED = 'INVOICED',
+  PAYMENT_PARTIAL = 'PAYMENT_PARTIAL',
+  PAYMENT_CLOSED = 'PAYMENT_CLOSED',
+  CLOSED = 'CLOSED',
+  CANCELLED = 'CANCELLED',
+  FORCE_CLOSED = 'FORCE_CLOSED',
+}
+
+/**
+ * User Roles - Complete role hierarchy
+ */
+export enum Role {
+  MD = 'MD',
+  DIRECTOR = 'DIRECTOR',
+  SALES_MANAGER = 'SALES_MANAGER',
+  SALES_EXECUTIVE = 'SALES_EXECUTIVE',
+  PURCHASE_MANAGER = 'PURCHASE_MANAGER',
+  SOURCING_ENGINEER = 'SOURCING_ENGINEER',
+  PURCHASE_ENGINEER = 'PURCHASE_ENGINEER',
+  FINANCE_MANAGER = 'FINANCE_MANAGER',
+  FINANCE_OFFICER = 'FINANCE_OFFICER',
+  FINANCE_EXECUTIVE = 'FINANCE_EXECUTIVE',
+  TECH_LEAD = 'TECH_LEAD',
+  TECH_ENGINEER = 'TECH_ENGINEER',
+  COMPLIANCE_MANAGER = 'COMPLIANCE_MANAGER',
+  COMPLIANCE_OFFICER = 'COMPLIANCE_OFFICER',
+  QC_MANAGER = 'QC_MANAGER',
+  QC_ENGINEER = 'QC_ENGINEER',
+  WAREHOUSE_MANAGER = 'WAREHOUSE_MANAGER',
+  WAREHOUSE_EXECUTIVE = 'WAREHOUSE_EXECUTIVE',
+  LOGISTICS_MANAGER = 'LOGISTICS_MANAGER',
+  LOGISTICS_EXECUTIVE = 'LOGISTICS_EXECUTIVE',
+  ADMIN = 'ADMIN',
+  SUPER_ADMIN = 'SUPER_ADMIN',
+}
+
+/**
+ * Incoterms - International Commercial Terms
+ */
+export enum Incoterm {
+  EXW = 'EXW',
+  FCA = 'FCA',
+  CPT = 'CPT',
+  CIP = 'CIP',
+  DAP = 'DAP',
+  DPU = 'DPU',
+  DDP = 'DDP',
+  FAS = 'FAS',
+  FOB = 'FOB',
+  CFR = 'CFR',
+  CIF = 'CIF',
+}
+
+/**
+ * Risk Categories for customers
+ */
+export enum RiskCategory {
+  LOW = 'LOW',
+  MEDIUM = 'MEDIUM',
+  HIGH = 'HIGH',
+  BLOCKED = 'BLOCKED',
+}
+
+/**
+ * Credit Status
+ */
+export enum CreditStatus {
+  ACTIVE = 'ACTIVE',
+  SUSPENDED = 'SUSPENDED',
+  BLOCKED = 'BLOCKED',
+}
+
+/**
+ * Audit Action Types
+ */
+export enum AuditAction {
+  CREATE = 'CREATE',
+  UPDATE = 'UPDATE',
+  DELETE = 'DELETE',
+  TRANSITION = 'TRANSITION',
+  REVISION = 'REVISION',
+  APPROVE = 'APPROVE',
+  REJECT = 'REJECT',
+  OVERRIDE = 'OVERRIDE',
+}
+
+/**
+ * Document Types
+ */
+export enum DocumentType {
+  RFQ_DOC = 'RFQ_DOC',
+  TECH_SPEC = 'TECH_SPEC',
+  QUOTE_PDF = 'QUOTE_PDF',
+  PO_DOC = 'PO_DOC',
+  PI_DOC = 'PI_DOC',
+  CI_DOC = 'CI_DOC',
+  PKG_LIST = 'PKG_LIST',
+  BOL = 'BOL',
+  AWB = 'AWB',
+  COO = 'COO',
+  TEST_CERT = 'TEST_CERT',
+  GRN_DOC = 'GRN_DOC',
+  QC_REPORT = 'QC_REPORT',
+  DC_DOC = 'DC_DOC',
+  POD = 'POD',
+  CUST_PO = 'CUST_PO',
+}
+
+/**
+ * Notification Channels
+ */
+export enum NotificationChannel {
+  EMAIL = 'EMAIL',
+  SMS = 'SMS',
+  IN_APP = 'IN_APP',
+  PUSH = 'PUSH',
+}
+
+/**
+ * Currency codes
+ */
+export enum Currency {
+  INR = 'INR',
+  USD = 'USD',
+  EUR = 'EUR',
+  GBP = 'GBP',
+  JPY = 'JPY',
+  CNY = 'CNY',
+  AED = 'AED',
+}
+
+/**
+ * FX Rate Sources
+ */
+export enum FxRateSource {
+  RBI = 'RBI',
+  OANDA = 'OANDA',
+  MANUAL = 'MANUAL',
+}
+
+/**
+ * Vendor Quote Status
+ */
+export enum VendorQuoteStatus {
+  RECEIVED = 'RECEIVED',
+  UNDER_REVIEW = 'UNDER_REVIEW',
+  SHORTLISTED = 'SHORTLISTED',
+  SELECTED = 'SELECTED',
+  REJECTED = 'REJECTED',
+}
+
+/**
+ * QC Status
+ */
+export enum QcStatus {
+  PENDING = 'PENDING',
+  PASSED = 'PASSED',
+  FAILED = 'FAILED',
+  PARTIAL = 'PARTIAL',
+}
+
+/**
+ * RMA Types
+ */
+export enum RmaType {
+  QC_REJECTION = 'QC_REJECTION',
+  CUSTOMER_RETURN = 'CUSTOMER_RETURN',
+  WRONG_ITEM = 'WRONG_ITEM',
+  DAMAGED_GOODS = 'DAMAGED_GOODS',
+  OVER_SUPPLY = 'OVER_SUPPLY',
+  WARRANTY_CLAIM = 'WARRANTY_CLAIM',
+}
+
+/**
+ * RMA Resolution Types
+ */
+export enum RmaResolutionType {
+  REPLACEMENT = 'REPLACEMENT',
+  CREDIT_NOTE = 'CREDIT_NOTE',
+  REFUND = 'REFUND',
+  REPAIR = 'REPAIR',
+  VENDOR_RETURN = 'VENDOR_RETURN',
+}
+
+/**
+ * Compliance Status
+ */
+export enum ComplianceStatus {
+  PENDING = 'PENDING',
+  UNDER_REVIEW = 'UNDER_REVIEW',
+  APPROVED = 'APPROVED',
+  REJECTED = 'REJECTED',
+  REQUIRES_LICENSE = 'REQUIRES_LICENSE',
+}
