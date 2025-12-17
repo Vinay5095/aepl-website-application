@@ -253,15 +253,23 @@
 - [x] Rate validation and sanity checks
 - [x] 8+ currency pairs supported
 
-### 14. Tax Engine (60% Complete)
-**File:** `apps/api/src/services/tax.ts`
+### 14. Tax Engine (90% Complete) ✅
+**Files:** `apps/api/src/services/tax.ts`, `tax-calculator.ts`
 
 - [x] Tax configuration structure
 - [x] GST calculation logic (India)
 - [x] HS code validation
-- [ ] Customs duty calculator incomplete
-- [ ] Multi-country tax rules incomplete
-- [ ] Automatic tax application incomplete
+- [x] Customs duty calculator COMPLETE
+- [x] Multi-country tax rules COMPLETE (10 countries)
+- [x] Automatic tax application COMPLETE
+- [x] Country-specific configurations (GST, VAT, Sales Tax)
+- [x] Zero-rated exports and exempt categories
+- [x] Reduced rates by product category
+- [x] US state tax support (20 states)
+- [x] International transaction tax (CIF + duty + tax)
+- [x] Landed cost calculation
+- [x] Tax validation and error handling
+- [ ] Advanced features (tax treaties, duty drawback, FTAs)
 
 ### 15. Notification Engine (85% Complete) ✅
 **Files:** `apps/api/src/services/notification.ts`, `email-service.ts`, `sms-service.ts`
