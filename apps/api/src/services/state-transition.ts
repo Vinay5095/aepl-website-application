@@ -366,34 +366,36 @@ async function executeSideEffect(sideEffect: any, item: any, context: Transition
       break;
     
     case 'NOTIFY':
-      // Trigger notification to specified targets
-      // This would integrate with notification service
+      // TODO: Integrate with notification service
+      // Queue notifications for each target role
       if (sideEffect.targets) {
-        // Queue notifications for each target role
-        // For now, just log it (will be implemented with Notification Engine)
-        console.log(`Notification queued for roles: ${sideEffect.targets.join(', ')}`);
+        // Notification will be queued in notification_queue table
+        // Implementation pending: Notification Engine
       }
       break;
     
     case 'ASSIGN_OWNER':
-      // Auto-assign owner based on role
+      // TODO: Implement owner assignment
+      // Query users table for available user with specified role
+      // Assign as owner for the item
       if (sideEffect.role) {
-        // This would query users table for available user with that role
-        // For now, keeping current owner
+        // Implementation pending: User assignment logic
       }
       break;
     
     case 'CREATE_RECORD':
-      // Create related records (e.g., commercial terms, compliance data)
+      // TODO: Implement related record creation
+      // Create related entities like commercial_terms, compliance_data
       if (sideEffect.entity && sideEffect.data) {
-        // This would create related entity
-        console.log(`Create ${sideEffect.entity} record`);
+        // Implementation pending: Related entity creation
       }
       break;
     
     default:
-      // Unknown side effect type
-      console.warn(`Unknown side effect type: ${sideEffect.type}`);
+      // Unknown side effect type - log warning
+      if (process.env.NODE_ENV !== 'production') {
+        console.warn(`Unknown side effect type: ${sideEffect.type}`);
+      }
   }
   
   return updateData;
@@ -402,13 +404,29 @@ async function executeSideEffect(sideEffect: any, item: any, context: Transition
 /**
  * Parse SLA duration string to hours
  * Examples: "2h" => 2, "24h" => 24, "2d" => 48
+ * @throws {AppError} If duration format is invalid
  */
 function parseSlaHours(duration: string): number {
   const match = duration.match(/^(\d+)([hd])$/);
-  if (!match) return 24; // Default 24 hours
+  
+  if (!match) {
+    throw new AppError(
+      400,
+      'INVALID_SLA_DURATION',
+      `Invalid SLA duration format: "${duration}". Expected format: "2h" or "2d"`
+    );
+  }
   
   const value = parseInt(match[1]);
   const unit = match[2];
+  
+  if (value <= 0) {
+    throw new AppError(
+      400,
+      'INVALID_SLA_DURATION',
+      `SLA duration must be positive: "${duration}"`
+    );
+  }
   
   return unit === 'h' ? value : value * 24; // 'd' => days to hours
 }

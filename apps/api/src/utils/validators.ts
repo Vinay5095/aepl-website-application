@@ -57,19 +57,29 @@ export async function validateQuantityConstraints(
     throw new BusinessRuleError('Product not found');
   }
 
+  // Helper to safely convert to number
+  const toNumber = (value: any): number => {
+    if (typeof value === 'number') return value;
+    if (typeof value === 'string') return parseFloat(value);
+    return 0;
+  };
+
   // Check MOQ
-  if (product.moq && quantity < parseFloat(product.moq.toString())) {
-    throw new BusinessRuleError(
-      `Quantity ${quantity} is below minimum order quantity of ${product.moq}`
-    );
+  if (product.moq) {
+    const moq = toNumber(product.moq);
+    if (quantity < moq) {
+      throw new BusinessRuleError(
+        `Quantity ${quantity} is below minimum order quantity of ${moq}`
+      );
+    }
   }
 
   // Check pack size
   if (product.packSize) {
-    const packSize = parseFloat(product.packSize.toString());
-    if (quantity % packSize !== 0) {
+    const packSize = toNumber(product.packSize);
+    if (packSize > 0 && quantity % packSize !== 0) {
       throw new BusinessRuleError(
-        `Quantity must be in multiples of pack size ${product.packSize}`
+        `Quantity must be in multiples of pack size ${packSize}`
       );
     }
   }
@@ -230,9 +240,18 @@ export function validateCurrency(currency: string): boolean {
 }
 
 /**
+ * Payment terms structure
+ */
+export interface PaymentTerms {
+  advancePct?: number;
+  balanceDays?: number;
+  creditDays?: number;
+}
+
+/**
  * Validate payment terms structure
  */
-export function validatePaymentTerms(paymentTerms: any): boolean {
+export function validatePaymentTerms(paymentTerms: PaymentTerms | null | undefined): boolean {
   if (!paymentTerms) {
     throw new BusinessRuleError('Payment terms are required');
   }
@@ -246,6 +265,12 @@ export function validatePaymentTerms(paymentTerms: any): boolean {
   if (typeof paymentTerms.balanceDays === 'number') {
     if (paymentTerms.balanceDays < 0) {
       throw new BusinessRuleError('Balance days must be non-negative');
+    }
+  }
+
+  if (typeof paymentTerms.creditDays === 'number') {
+    if (paymentTerms.creditDays < 0) {
+      throw new BusinessRuleError('Credit days must be non-negative');
     }
   }
 
