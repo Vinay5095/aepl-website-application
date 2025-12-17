@@ -219,13 +219,30 @@ export async function calculateFxGainLoss(
     return updated;
   }
 
+  // Fetch order item to get currencies
+  const { orderItems } = await import('@trade-os/database/schema');
+  const [orderItem] = await db
+    .select({ currency: orderItems.currency, vendorId: orderItems.vendorId })
+    .from(orderItems)
+    .where(eq(orderItems.id, orderItemId))
+    .limit(1);
+  
+  if (!orderItem) {
+    throw new AppError(404, 'Order item not found');
+  }
+  
+  // Get vendor currency from purchase order or default to item currency
+  // In a multi-currency scenario, vendor may quote in different currency
+  const vendorCurrency = orderItem.currency; // Simplified: use item currency
+  const customerCurrency = orderItem.currency; // Typically same as selling currency
+  
   // Create new FX tracking record
   const [created] = await db
     .insert(orderItemFx)
     .values({
       orderItemId,
-      vendorCurrency: 'USD', // TODO: Get from order item
-      customerCurrency: 'INR', // TODO: Get from order item
+      vendorCurrency,
+      customerCurrency,
       bookingRate: bookingRate.toString(),
       bookingRateDate: bookingDate,
       settlementRate: settlementRate.toString(),
