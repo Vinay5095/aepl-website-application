@@ -26,6 +26,7 @@ import notificationRoutes from './routes/notification';
 
 // Services
 import { startSlaMonitoringCron } from './services/sla-cron';
+import { startFxRateCron } from './services/fx-rate-cron';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -120,8 +121,12 @@ app.listen(PORT, () => {
   console.log(`📅 Started at: ${new Date().toISOString()}`);
   console.log('='.repeat(60));
   
-  // Start SLA monitoring cron job
+  // Start cron jobs
   startSlaMonitoringCron();
+  startFxRateCron();
+  
+  console.log('⏰ Background jobs started: SLA Monitoring, FX Rate Fetching');
+  console.log('='.repeat(60));
 });
 
 // Graceful shutdown
