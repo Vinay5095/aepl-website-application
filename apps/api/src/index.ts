@@ -27,6 +27,7 @@ import tallyRoutes from './routes/tally';
 import revisionRoutes from './routes/revision';
 import quantityFulfillmentRoutes from './routes/quantity-fulfillment';
 import rmaRoutes from './routes/rma';
+import commercialTermsRoutes from './routes/commercial-terms';
 
 // Services
 import { startSlaMonitoringCron } from './services/sla-cron';
@@ -106,6 +107,7 @@ app.use(`/api/${API_VERSION}/integrations/tally`, tallyRoutes);
 app.use(`/api/${API_VERSION}`, revisionRoutes);
 app.use(`/api/${API_VERSION}`, quantityFulfillmentRoutes);
 app.use(`/api/${API_VERSION}`, rmaRoutes);
+app.use(`/api/${API_VERSION}`, commercialTermsRoutes);
 
 /**
  * 404 Handler
