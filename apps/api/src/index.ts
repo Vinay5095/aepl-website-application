@@ -12,6 +12,7 @@ import { errorHandler, notFoundHandler } from './middleware/error';
 
 // Routes
 import authRoutes from './routes/auth';
+import stateTransitionRoutes from './routes/state-transition';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -70,6 +71,7 @@ app.get('/health', (req, res) => {
  * API Routes
  */
 app.use(`/api/${API_VERSION}/auth`, authRoutes);
+app.use(`/api/${API_VERSION}`, stateTransitionRoutes);
 
 // TODO: Add more routes
 // app.use(`/api/${API_VERSION}/rfq`, rfqRoutes);
