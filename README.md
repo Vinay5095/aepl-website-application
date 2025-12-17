@@ -4647,63 +4647,799 @@ const validateRequest = (schema: ZodSchema) => (req, res, next) => {
 
 ## UI/UX Design System
 
-### Visual Identity
+### ATCO Brand Design Language
 
-| Element | Specification |
-|---------|---------------|
-| Primary Color | `oklch(0.7 0.15 250)` (Enterprise Blue) |
-| Secondary Color | `oklch(0.6 0.1 150)` (Slate Gray) |
-| Accent Color | `oklch(0.75 0.2 145)` (Success Green) |
-| Warning Color | `oklch(0.8 0.15 85)` (Amber) |
-| Error Color | `oklch(0.65 0.25 25)` (Red) |
-| Font Family | `Inter, system-ui, sans-serif` |
-| Border Radius | `0.5rem` (default), `0.75rem` (cards) |
+> **Replication Guide**: To replicate the ATCO Brand Design Language in another project, use the following comprehensive architectural and design prompt. This prompt is engineered to guide a high-level frontend engineer or an LLM to build a UI that is visually and structurally identical to the ATCO Engineer Portal.
 
-### Component Library
+---
 
-All UI components must use **Shadcn/UI** with consistent variants:
+### Design System Prompt for LLM/Developer
 
-```typescript
-// Button variants
-type ButtonVariant = 'default' | 'secondary' | 'outline' | 'ghost' | 'destructive' | 'link';
-type ButtonSize = 'sm' | 'default' | 'lg' | 'icon';
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PROMPT: BUILD THE ATCO ENTERPRISE INDUSTRIAL UI/UX
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-// Form field states
-type FieldState = 'default' | 'focus' | 'error' | 'disabled' | 'readonly';
+ROLE: Act as a World-Class Lead Frontend Engineer specialized in Industrial 
+      B2B SaaS design systems.
 
-// Table row states
-type RowState = 'default' | 'selected' | 'hover' | 'loading' | 'error';
+OBJECTIVE: Build a high-fidelity React frontend based on the "ATCO Design 
+           Language." The aesthetic is "Executive Command Center"—clean, 
+           data-dense, authoritative, and industrial-professional.
 ```
 
-### State Indicators
+---
 
-```typescript
-const STATUS_CONFIG: Record<string, { color: string; icon: string }> = {
-  DRAFT: { color: 'gray', icon: 'FileEdit' },
-  SUBMITTED: { color: 'blue', icon: 'Send' },
-  REVIEW: { color: 'amber', icon: 'Eye' },
-  APPROVED: { color: 'green', icon: 'CheckCircle' },
-  REJECTED: { color: 'red', icon: 'XCircle' },
-  CLOSED: { color: 'slate', icon: 'Lock' },
-  AT_RISK: { color: 'orange', icon: 'AlertTriangle' },
-  OVERDUE: { color: 'red', icon: 'Clock' },
+### Core Visual Identity (Tailwind Configuration)
+
+#### Font Configuration
+
+```javascript
+// tailwind.config.js
+module.exports = {
+  theme: {
+    extend: {
+      fontFamily: {
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+      },
+      fontWeight: {
+        light: '300',
+        normal: '400',
+        medium: '500',
+        semibold: '600',
+        bold: '700',
+      },
+    },
+  },
 };
 ```
 
-### Layout Templates
+#### Color Palette Specification
+
+| Token | Hex Value | Usage |
+|-------|-----------|-------|
+| `atco-600` (Primary) | `#0891b2` | Primary buttons, active states, links |
+| `atco-700` (Primary Dark) | `#0e7490` | Hover states, pressed buttons |
+| `atco-50` | `#ecfeff` | Light backgrounds for AI features |
+| `atco-100` | `#cffafe` | Borders for AI/highlight cards |
+| `slate-50` | `#f8fafc` | Page backgrounds |
+| `slate-100` | `#f1f5f9` | Card header/footer backgrounds |
+| `slate-200` | `#e2e8f0` | Standard borders |
+| `slate-500` | `#64748b` | Secondary text, category labels |
+| `slate-700` | `#334155` | Body text |
+| `slate-900` | `#0f172a` | Sidebar backgrounds, deep grounding |
+| `amber-500` | `#f59e0b` | Warnings, urgency indicators |
+| `emerald-600` | `#059669` | Success states, active logic |
+| `red-500` | `#ef4444` | Error states, destructive actions |
+
+#### Full Tailwind Theme Extension
+
+```javascript
+// tailwind.config.js
+module.exports = {
+  theme: {
+    extend: {
+      colors: {
+        atco: {
+          50: '#ecfeff',
+          100: '#cffafe',
+          200: '#a5f3fc',
+          300: '#67e8f9',
+          400: '#22d3ee',
+          500: '#06b6d4',
+          600: '#0891b2',
+          700: '#0e7490',
+          800: '#155e75',
+          900: '#164e63',
+        },
+      },
+      boxShadow: {
+        'atco': '0 4px 14px 0 rgba(8, 145, 178, 0.15)',
+        'atco-lg': '0 10px 40px -10px rgba(8, 145, 178, 0.25)',
+        'card': '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)',
+        'card-hover': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
+      },
+      animation: {
+        'fade-in': 'fadeIn 0.3s ease-out forwards',
+        'scale-in': 'scaleIn 0.2s ease-out forwards',
+        'slide-in-right': 'slideInRight 0.3s ease-out forwards',
+        'slide-in-up': 'slideInUp 0.3s ease-out forwards',
+      },
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0', transform: 'translateY(10px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        scaleIn: {
+          '0%': { opacity: '0', transform: 'scale(0.95)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
+        },
+        slideInRight: {
+          '0%': { opacity: '0', transform: 'translateX(20px)' },
+          '100%': { opacity: '1', transform: 'translateX(0)' },
+        },
+        slideInUp: {
+          '0%': { opacity: '0', transform: 'translateY(20px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+      },
+    },
+  },
+};
+```
+
+---
+
+### Component Architecture Design
+
+#### The "Industrial Card" Component
+
+```typescript
+// components/ui/industrial-card.tsx
+interface IndustrialCardProps {
+  children: React.ReactNode;
+  header?: React.ReactNode;
+  footer?: React.ReactNode;
+  hoverable?: boolean;
+  className?: string;
+}
+
+// Styling Specification:
+const cardStyles = {
+  base: 'bg-white rounded-2xl border border-slate-200 overflow-hidden',
+  hoverable: 'transition-all duration-200 hover:-translate-y-1 hover:shadow-md',
+  header: 'bg-slate-50 px-6 py-4 border-b border-slate-200',
+  body: 'p-6',
+  footer: 'bg-slate-50 px-6 py-4 border-t border-slate-200',
+};
+```
+
+**Visual Example:**
+```
+┌─────────────────────────────────────────────┐
+│ ░░░░░░░░░░ HEADER (bg-slate-50) ░░░░░░░░░░ │
+├─────────────────────────────────────────────┤
+│                                             │
+│           BODY CONTENT (bg-white)           │
+│                                             │
+├─────────────────────────────────────────────┤
+│ ░░░░░░░░░░ FOOTER (bg-slate-50) ░░░░░░░░░░ │
+└─────────────────────────────────────────────┘
+     ↑ rounded-2xl, border-slate-200
+```
+
+#### The "Command Sidebar" Component
+
+```typescript
+// components/layout/command-sidebar.tsx
+
+// Container Specification:
+const sidebarStyles = {
+  container: 'w-64 h-screen bg-slate-900 flex flex-col',
+  logo: 'h-20 flex items-center px-6 border-b border-slate-800',
+  nav: 'flex-1 overflow-y-auto py-4',
+  category: 'px-6 py-2 text-[10px] font-bold uppercase tracking-widest text-slate-500',
+  item: {
+    base: 'flex items-center gap-3 px-6 py-3 text-sm text-slate-400 hover:text-white hover:bg-slate-800 transition-colors',
+    active: 'bg-atco-600 text-white shadow-lg shadow-atco-900/20',
+  },
+  footer: 'p-4 border-t border-slate-800',
+};
+```
+
+**Visual Structure:**
+```
+┌─────────────────────┐
+│ ┌─────────────────┐ │  ← bg-slate-900
+│ │   ATCO LOGO     │ │  ← h-20, border-b
+│ └─────────────────┘ │
+│                     │
+│ MAIN NAVIGATION     │  ← text-[10px] uppercase
+│ ┌─────────────────┐ │
+│ │ ● Dashboard     │ │  ← Active: bg-atco-600
+│ │   RFQ Manager   │ │
+│ │   Orders        │ │
+│ └─────────────────┘ │
+│                     │
+│ OPERATIONS          │  ← Category label
+│ ┌─────────────────┐ │
+│ │   Inventory     │ │
+│ │   Shipments     │ │
+│ └─────────────────┘ │
+│                     │
+│ ┌─────────────────┐ │
+│ │  Plan Badge     │ │  ← Footer section
+│ └─────────────────┘ │
+└─────────────────────┘
+```
+
+#### Status Badges
+
+```typescript
+// components/ui/status-badge.tsx
+
+type BadgeVariant = 'success' | 'warning' | 'error' | 'info' | 'neutral' | 'ai';
+
+const badgeStyles: Record<BadgeVariant, string> = {
+  success: 'bg-green-50 text-green-700 border border-green-100',
+  warning: 'bg-amber-50 text-amber-700 border border-amber-100',
+  error: 'bg-red-50 text-red-700 border border-red-100',
+  info: 'bg-blue-50 text-blue-700 border border-blue-100',
+  neutral: 'bg-slate-50 text-slate-700 border border-slate-200',
+  ai: 'bg-atco-50 text-atco-700 border border-atco-100',
+};
+
+const baseBadgeStyle = 'inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold';
+```
+
+**Badge Examples:**
+```
+┌──────────────┐  ┌──────────────┐  ┌──────────────┐
+│ ● ACTIVE     │  │ ⚠ PENDING    │  │ ✕ REJECTED   │
+│  (green)     │  │  (amber)     │  │  (red)       │
+└──────────────┘  └──────────────┘  └──────────────┘
+
+┌──────────────┐  ┌──────────────┐
+│ ℹ IN REVIEW  │  │ ✦ AI READY   │
+│  (blue)      │  │  (atco)      │
+└──────────────┘  └──────────────┘
+```
+
+#### AI Integration UX Pattern
+
+```typescript
+// components/ui/ai-card.tsx
+
+// AI features MUST use:
+// 1. Sparkles icon from Lucide React
+// 2. atco-600 accent color
+// 3. Gradient background
+
+const aiCardStyles = {
+  container: 'bg-gradient-to-br from-atco-50 to-white border border-atco-100 rounded-2xl p-6',
+  header: 'flex items-center gap-2 text-atco-700 font-semibold',
+  icon: 'w-5 h-5 text-atco-600', // Sparkles icon
+  badge: 'bg-atco-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase',
+  content: 'mt-4 text-slate-700',
+};
+```
+
+**AI Card Visual:**
+```
+┌─────────────────────────────────────────────┐
+│ ✦ Smart RFQ Builder       ┌────────────┐   │
+│                           │ BETA ACCESS │   │
+│                           └────────────┘   │
+│                                             │
+│ Transform rough project requirements into   │
+│ precise equipment lists instantly.          │
+│                                             │
+│ ┌─────────┐ ┌───────────────┐ ┌─────┐       │
+│ │Auto-Quote│ │Project Scoping│ │ NLP │       │
+│ └─────────┘ └───────────────┘ └─────┘       │
+│                                             │
+│ LAUNCH TOOL →                               │
+└─────────────────────────────────────────────┘
+  ↑ bg-gradient-to-br from-atco-50 to-white
+    border-atco-100
+```
+
+---
+
+### Key UX Patterns
+
+#### High-Density Data Tables
+
+```typescript
+// components/ui/data-table.tsx
+
+const tableStyles = {
+  container: 'w-full border border-slate-200 rounded-xl overflow-hidden',
+  table: 'w-full divide-y divide-slate-100',
+  thead: 'bg-slate-50',
+  th: 'px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wider',
+  tbody: 'bg-white divide-y divide-slate-100',
+  tr: 'hover:bg-slate-50 transition-colors',
+  td: 'px-6 py-4 text-sm text-slate-700',
+  tdMono: 'px-6 py-4 text-sm font-mono text-slate-900', // For IDs, codes
+};
+```
+
+**Table Visual:**
+```
+┌─────────────────────────────────────────────────────────────────┐
+│ ░░░ RFQ ID ░░░░░ CUSTOMER ░░░░░ STATUS ░░░░░ CREATED ░░░░░░░░░ │ ← bg-slate-50
+├─────────────────────────────────────────────────────────────────┤   text-xs uppercase
+│ RFQ-2024-0123   Tata Motors      ● Active    Dec 15, 2024      │ ← hover:bg-slate-50
+│─────────────────────────────────────────────────────────────────│ ← divide-slate-100
+│ RFQ-2024-0124   Reliance Ind.    ○ Draft     Dec 14, 2024      │
+│─────────────────────────────────────────────────────────────────│
+│ RFQ-2024-0125   L&T Engineering  ⚠ Review    Dec 13, 2024      │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+#### Workflow Tracker (Horizontal Stepper)
+
+```typescript
+// components/ui/workflow-tracker.tsx
+
+interface WorkflowStep {
+  id: string;
+  label: string;
+  status: 'completed' | 'current' | 'upcoming';
+}
+
+const stepStyles = {
+  completed: {
+    circle: 'w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center',
+    line: 'h-0.5 w-full bg-emerald-600',
+    label: 'text-xs font-medium text-emerald-700',
+  },
+  current: {
+    circle: 'w-8 h-8 rounded-full bg-atco-600 text-white flex items-center justify-center ring-4 ring-atco-100',
+    line: 'h-0.5 w-full bg-slate-200',
+    label: 'text-xs font-bold text-atco-700',
+  },
+  upcoming: {
+    circle: 'w-8 h-8 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center',
+    line: 'h-0.5 w-full bg-slate-200',
+    label: 'text-xs font-medium text-slate-500',
+  },
+};
+```
+
+**Workflow Visual:**
+```
+    ✓           ✓           ●           ○           ○
+   (1)────────(2)────────(3)────────(4)────────(5)
+  Draft      Submit     Review     Approve    Close
+    │           │          │
+    └───────────┴──────────┘
+         emerald-600        atco-600     slate-200
+                           ring-4
+                           ring-atco-100
+```
+
+#### The "Sales Brain" Product Logic
+
+```typescript
+// components/catalog/product-card.tsx
+
+// Product listings MUST include:
+// 1. Specs Preview: Tiny badges showing technical attributes
+// 2. Quick Add to RFQ: Primary action button
+
+const productCardStyles = {
+  container: 'bg-white rounded-2xl border border-slate-200 overflow-hidden hover:-translate-y-1 hover:shadow-md transition-all duration-200',
+  image: 'w-full h-48 object-cover bg-slate-100',
+  content: 'p-5',
+  title: 'font-semibold text-slate-900 line-clamp-2',
+  brand: 'text-sm text-slate-500 mt-1',
+  specs: 'flex flex-wrap gap-1.5 mt-3',
+  specBadge: 'inline-flex items-center px-2 py-0.5 bg-slate-100 text-slate-600 text-[10px] font-medium rounded',
+  price: 'mt-4 text-lg font-bold text-slate-900',
+  actions: 'mt-4 flex gap-2',
+  primaryBtn: 'flex-1 bg-atco-600 hover:bg-atco-700 text-white text-xs font-bold uppercase tracking-wide py-2.5 px-4 rounded-lg transition-colors',
+  secondaryBtn: 'p-2.5 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors',
+};
+```
+
+**Product Card Visual:**
+```
+┌────────────────────────────┐
+│ ┌────────────────────────┐ │
+│ │                        │ │
+│ │     PRODUCT IMAGE      │ │
+│ │                        │ │
+│ └────────────────────────┘ │
+│                            │
+│ 3M Safety Helmet H-700    │
+│ 3M Industrial             │
+│                            │
+│ ┌────────┐ ┌──────────────┐│
+│ │Material:││IP Rating: 65 ││ ← Specs Preview
+│ │ ABS    │└──────────────┘│
+│ └────────┘                 │
+│                            │
+│ ₹2,450.00                  │
+│                            │
+│ ┌────────────────┐ ┌─────┐ │
+│ │ ADD TO RFQ     │ │ ♡   │ │
+│ └────────────────┘ └─────┘ │
+└────────────────────────────┘
+```
+
+#### Global Search (Command Palette)
+
+```typescript
+// components/ui/command-palette.tsx
+
+// Trigger: Ctrl+K (Windows) / Cmd+K (Mac)
+
+const commandPaletteStyles = {
+  overlay: 'fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50',
+  container: 'fixed top-[20%] left-1/2 -translate-x-1/2 w-full max-w-xl bg-white rounded-2xl shadow-2xl overflow-hidden z-50 animate-scale-in',
+  input: 'w-full px-6 py-4 text-lg border-b border-slate-200 focus:outline-none',
+  results: 'max-h-96 overflow-y-auto',
+  category: 'px-6 py-2 text-[10px] font-bold uppercase tracking-widest text-slate-500 bg-slate-50',
+  item: 'flex items-center gap-3 px-6 py-3 hover:bg-slate-50 cursor-pointer transition-colors',
+  itemIcon: 'w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-500',
+  itemText: 'flex-1',
+  itemTitle: 'text-sm font-medium text-slate-900',
+  itemMeta: 'text-xs text-slate-500',
+  shortcut: 'text-xs text-slate-400 bg-slate-100 px-2 py-0.5 rounded',
+};
+```
+
+**Command Palette Visual:**
+```
+┌──────────────────────────────────────────────────────────┐
+│ 🔍 Search products, RFQs, or type a command...           │
+├──────────────────────────────────────────────────────────┤
+│ ACTIONS                                                   │
+│ ┌──────┐                                                 │
+│ │  +   │  Create New RFQ                         ⌘N     │
+│ └──────┘                                                 │
+│ ┌──────┐                                                 │
+│ │  ↗   │  Go to Orders                           ⌘O     │
+│ └──────┘                                                 │
+├──────────────────────────────────────────────────────────┤
+│ PRODUCTS                                                  │
+│ ┌──────┐                                                 │
+│ │ 🔧   │  Safety Helmet H-700                            │
+│ │      │  3M • SKU: 3M-H700-WHT                          │
+│ └──────┘                                                 │
+│ ┌──────┐                                                 │
+│ │ 🔧   │  Impact Drill DWD024                            │
+│ │      │  DeWalt • SKU: DW-DWD024                        │
+│ └──────┘                                                 │
+└──────────────────────────────────────────────────────────┘
+```
+
+---
+
+### Layout Strategy
+
+#### Public Site Layout
+
+```typescript
+// layouts/public-layout.tsx
+
+const publicLayoutStyles = {
+  container: 'min-h-screen bg-slate-50',
+  header: 'sticky top-0 z-40 h-20 bg-white/80 backdrop-blur-md border-b border-slate-200',
+  headerInner: 'max-w-[96%] mx-auto h-full flex items-center justify-between',
+  nav: 'hidden md:flex items-center gap-8',
+  navItem: 'text-sm font-medium text-slate-600 hover:text-atco-600 transition-colors',
+  navItemActive: 'text-sm font-medium text-atco-600',
+  main: 'max-w-[96%] mx-auto py-12',
+  footer: 'bg-slate-900 text-slate-400',
+};
+```
+
+**Public Layout Visual:**
+```
+┌────────────────────────────────────────────────────────────────────┐
+│ ┌────────────────────────────────────────────────────────────────┐ │
+│ │ LOGO     Home  Catalog  Solutions  Company  Contact    🔍 Login│ │ ← h-20, sticky
+│ └────────────────────────────────────────────────────────────────┘ │   backdrop-blur
+├────────────────────────────────────────────────────────────────────┤
+│                                                                    │
+│  ┌────────────────────────────────────────────────────────────┐   │
+│  │                                                            │   │
+│  │                    max-w-[96%] CONTENT                     │   │ ← Centered container
+│  │                                                            │   │
+│  └────────────────────────────────────────────────────────────┘   │
+│                                                                    │
+├────────────────────────────────────────────────────────────────────┤
+│ ░░░░░░░░░░░░░░░░░░░░░ FOOTER (bg-slate-900) ░░░░░░░░░░░░░░░░░░░░░ │
+└────────────────────────────────────────────────────────────────────┘
+```
+
+#### Role-Based Portal Layout
+
+```typescript
+// layouts/portal-layout.tsx
+
+const portalLayoutStyles = {
+  container: 'h-screen flex overflow-hidden bg-slate-100',
+  sidebar: 'w-64 flex-shrink-0 bg-slate-900', // Command Sidebar
+  main: 'flex-1 flex flex-col overflow-hidden',
+  header: 'h-16 bg-white border-b border-slate-200 flex items-center px-6',
+  content: 'flex-1 overflow-y-auto p-6 custom-scrollbar',
+};
+
+// Custom scrollbar CSS
+const customScrollbar = `
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1;
+    border-radius: 3px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: #94a3b8;
+  }
+`;
+```
+
+**Portal Layout Visual:**
+```
+┌──────────────────────────────────────────────────────────────────────────┐
+│ ┌─────────────┐ ┌──────────────────────────────────────────────────────┐ │
+│ │             │ │ Breadcrumb          🔔  👤 User Menu                 │ │ ← h-16
+│ │   COMMAND   │ ├──────────────────────────────────────────────────────┤ │
+│ │   SIDEBAR   │ │                                                      │ │
+│ │             │ │                                                      │ │
+│ │  bg-slate-  │ │              SCROLLABLE CONTENT                      │ │ ← overflow-y-auto
+│ │    900      │ │                                                      │ │   custom-scrollbar
+│ │             │ │              custom-scrollbar                        │ │
+│ │   w-64      │ │                                                      │ │
+│ │             │ │                                                      │ │
+│ │             │ │                                                      │ │
+│ └─────────────┘ └──────────────────────────────────────────────────────┘ │
+└──────────────────────────────────────────────────────────────────────────┘
+                                       ↑
+                            h-screen overflow-hidden
+```
+
+---
+
+### Technical Directives
+
+#### Required Dependencies
+
+```json
+{
+  "dependencies": {
+    "lucide-react": "^0.400.0",
+    "recharts": "^2.12.0",
+    "@radix-ui/react-dialog": "^1.0.5",
+    "@radix-ui/react-dropdown-menu": "^2.0.6",
+    "@radix-ui/react-tabs": "^1.0.4",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.0",
+    "tailwind-merge": "^2.2.0"
+  }
+}
+```
+
+#### Icon System (Lucide React)
+
+```typescript
+// All icons MUST use Lucide React
+import {
+  // Navigation
+  Home, FileText, ShoppingCart, Package, Truck, Users, Settings,
+  
+  // Actions
+  Plus, Edit, Trash2, Download, Upload, Send, Check, X,
+  
+  // Status
+  AlertTriangle, Clock, CheckCircle, XCircle, Info,
+  
+  // AI Features (MANDATORY for AI components)
+  Sparkles, Wand2, Brain, Zap,
+  
+  // Business
+  Building2, CreditCard, Receipt, Wallet,
+  
+  // Utility
+  Search, Filter, ChevronDown, ChevronRight, MoreHorizontal,
+} from 'lucide-react';
+```
+
+#### Data Visualization (Recharts)
+
+```typescript
+// components/charts/area-chart.tsx
+
+// ATCO standard chart configuration
+const chartConfig = {
+  colors: {
+    primary: '#0891b2', // atco-600
+    secondary: '#0e7490', // atco-700
+    grid: '#e2e8f0', // slate-200
+  },
+  gradient: {
+    id: 'atcoGradient',
+    stops: [
+      { offset: '0%', color: '#0891b2', opacity: 0.3 },
+      { offset: '100%', color: '#0891b2', opacity: 0 },
+    ],
+  },
+};
+
+// Example implementation
+<AreaChart data={data}>
+  <defs>
+    <linearGradient id="atcoGradient" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stopColor="#0891b2" stopOpacity={0.3} />
+      <stop offset="100%" stopColor="#0891b2" stopOpacity={0} />
+    </linearGradient>
+  </defs>
+  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+  <Area
+    type="monotone"
+    dataKey="value"
+    stroke="#0891b2"
+    strokeWidth={2}
+    fill="url(#atcoGradient)"
+  />
+</AreaChart>
+```
+
+#### Button Standards
+
+```typescript
+// components/ui/button.tsx
+
+// ALL primary buttons MUST be:
+// - uppercase
+// - tracking-wide
+// - font-bold
+
+const buttonVariants = cva(
+  'inline-flex items-center justify-center rounded-lg font-bold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-atco-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+  {
+    variants: {
+      variant: {
+        primary: 'bg-atco-600 text-white hover:bg-atco-700 uppercase tracking-wide shadow-sm hover:shadow-atco',
+        secondary: 'bg-slate-100 text-slate-900 hover:bg-slate-200',
+        outline: 'border border-slate-200 bg-white hover:bg-slate-50 text-slate-700',
+        ghost: 'hover:bg-slate-100 text-slate-700',
+        destructive: 'bg-red-500 text-white hover:bg-red-600 uppercase tracking-wide',
+        link: 'text-atco-600 underline-offset-4 hover:underline',
+      },
+      size: {
+        sm: 'h-9 px-3 text-xs',
+        md: 'h-10 px-4 text-sm',
+        lg: 'h-12 px-6 text-sm',
+        icon: 'h-10 w-10',
+      },
+    },
+    defaultVariants: {
+      variant: 'primary',
+      size: 'md',
+    },
+  }
+);
+```
+
+#### Audit Trail UI Component
+
+```typescript
+// components/audit/audit-trail.tsx
+
+// When a status changes, log it with:
+// 1. font-mono timestamp
+// 2. Actor avatar
+
+interface AuditEntry {
+  id: string;
+  timestamp: Date;
+  action: string;
+  actor: {
+    id: string;
+    name: string;
+    avatar?: string;
+  };
+  details?: Record<string, any>;
+}
+
+const auditStyles = {
+  container: 'space-y-4',
+  entry: 'flex gap-3',
+  avatar: 'w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold text-slate-600',
+  content: 'flex-1 min-w-0',
+  header: 'flex items-center gap-2 flex-wrap',
+  actor: 'font-medium text-slate-900',
+  action: 'text-sm text-slate-600',
+  timestamp: 'text-xs font-mono text-slate-400',
+  details: 'mt-1 text-sm text-slate-500 bg-slate-50 rounded-lg p-2',
+};
+```
+
+**Audit Trail Visual:**
+```
+┌─────────────────────────────────────────────────────────────┐
+│ AUDIT TRAIL                                                 │
+├─────────────────────────────────────────────────────────────┤
+│ ┌──┐                                                        │
+│ │RS│ Rajesh Sharma changed status to APPROVED               │
+│ └──┘ 2024-12-17T14:32:15.847Z                              │ ← font-mono
+│      ┌─────────────────────────────────────────────┐        │
+│      │ Previous: REVIEW                            │        │
+│      │ Reason: Technical specs verified            │        │
+│      └─────────────────────────────────────────────┘        │
+│─────────────────────────────────────────────────────────────│
+│ ┌──┐                                                        │
+│ │PP│ Priya Patel submitted for review                       │
+│ └──┘ 2024-12-17T10:15:42.123Z                              │
+│─────────────────────────────────────────────────────────────│
+│ ┌──┐                                                        │
+│ │SY│ System auto-created RFQ                                │
+│ └──┘ 2024-12-17T09:00:00.000Z                              │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
+
+### Component State Mapping
+
+```typescript
+// lib/status-config.ts
+
+export const STATUS_CONFIG: Record<string, {
+  color: 'success' | 'warning' | 'error' | 'info' | 'neutral';
+  icon: string;
+  label: string;
+}> = {
+  // RFQ States
+  DRAFT: { color: 'neutral', icon: 'FileEdit', label: 'Draft' },
+  RFQ_SUBMITTED: { color: 'info', icon: 'Send', label: 'Submitted' },
+  SALES_REVIEW: { color: 'info', icon: 'Eye', label: 'Sales Review' },
+  TECH_REVIEW: { color: 'info', icon: 'Settings', label: 'Tech Review' },
+  TECH_APPROVED: { color: 'success', icon: 'CheckCircle', label: 'Tech Approved' },
+  COMPLIANCE_REVIEW: { color: 'warning', icon: 'Shield', label: 'Compliance Review' },
+  STOCK_CHECK: { color: 'info', icon: 'Package', label: 'Stock Check' },
+  SOURCING_ACTIVE: { color: 'info', icon: 'Search', label: 'Sourcing' },
+  VENDOR_QUOTES_RECEIVED: { color: 'info', icon: 'FileText', label: 'Quotes Received' },
+  RATE_FINALIZED: { color: 'success', icon: 'Calculator', label: 'Rate Finalized' },
+  MARGIN_APPROVAL: { color: 'warning', icon: 'TrendingUp', label: 'Margin Approval' },
+  PRICE_FROZEN: { color: 'success', icon: 'Lock', label: 'Price Frozen' },
+  QUOTE_SENT: { color: 'info', icon: 'Send', label: 'Quote Sent' },
+  CUSTOMER_ACCEPTED: { color: 'success', icon: 'ThumbsUp', label: 'Accepted' },
+  CUSTOMER_REJECTED: { color: 'error', icon: 'ThumbsDown', label: 'Rejected' },
+  RFQ_CLOSED: { color: 'neutral', icon: 'Archive', label: 'Closed' },
+  
+  // Order States
+  PR_CREATED: { color: 'info', icon: 'FileText', label: 'PR Created' },
+  PR_ACKNOWLEDGED: { color: 'info', icon: 'Check', label: 'PR Acknowledged' },
+  CREDIT_CHECK: { color: 'warning', icon: 'CreditCard', label: 'Credit Check' },
+  PO_RELEASED: { color: 'success', icon: 'Send', label: 'PO Released' },
+  VENDOR_CONFIRMED: { color: 'success', icon: 'CheckCircle', label: 'Vendor Confirmed' },
+  IN_PRODUCTION: { color: 'info', icon: 'Cog', label: 'In Production' },
+  GOODS_RECEIVED: { color: 'success', icon: 'Package', label: 'Goods Received' },
+  QC_APPROVED: { color: 'success', icon: 'CheckCircle', label: 'QC Approved' },
+  QC_REJECTED: { color: 'error', icon: 'XCircle', label: 'QC Rejected' },
+  READY_TO_DISPATCH: { color: 'info', icon: 'Truck', label: 'Ready to Dispatch' },
+  DISPATCHED: { color: 'info', icon: 'Truck', label: 'Dispatched' },
+  DELIVERED: { color: 'success', icon: 'CheckCircle', label: 'Delivered' },
+  INVOICED: { color: 'info', icon: 'Receipt', label: 'Invoiced' },
+  PAYMENT_PARTIAL: { color: 'warning', icon: 'Wallet', label: 'Partial Payment' },
+  PAYMENT_CLOSED: { color: 'success', icon: 'CheckCircle', label: 'Payment Closed' },
+  CLOSED: { color: 'neutral', icon: 'Lock', label: 'Closed' },
+  CANCELLED: { color: 'error', icon: 'XCircle', label: 'Cancelled' },
+  FORCE_CLOSED: { color: 'neutral', icon: 'Lock', label: 'Force Closed' },
+  
+  // Risk States
+  AT_RISK: { color: 'warning', icon: 'AlertTriangle', label: 'At Risk' },
+  SLA_BREACH: { color: 'error', icon: 'Clock', label: 'SLA Breach' },
+  OVERDUE: { color: 'error', icon: 'AlertTriangle', label: 'Overdue' },
+};
+```
+
+---
+
+### Layout Templates (ASCII Wireframes)
 
 #### Dashboard Layout
 ```
 ┌─────────────────────────────────────────────────────┐
 │ ┌─────────┐  ┌─────────────────────────────────────┐│
-│ │ Sidebar │  │ Header (Breadcrumb + User Menu)    ││
-│ │         │  ├─────────────────────────────────────┤│
-│ │ Nav     │  │                                     ││
-│ │ Groups  │  │ Page Content                        ││
+│ │ COMMAND │  │ Header (Breadcrumb + User Menu)    ││
+│ │ SIDEBAR │  ├─────────────────────────────────────┤│
+│ │         │  │                                     ││
+│ │ bg-     │  │ Page Content                        ││
+│ │ slate-  │  │                                     ││
+│ │ 900     │  │ custom-scrollbar                    ││
 │ │         │  │                                     ││
 │ │         │  │                                     ││
-│ │ Plan    │  │                                     ││
-│ │ Badge   │  │                                     ││
 │ └─────────┘  └─────────────────────────────────────┘│
 └─────────────────────────────────────────────────────┘
 ```
@@ -4715,13 +5451,16 @@ const STATUS_CONFIG: Record<string, { color: string; icon: string }> = {
 ├──────────────────────────────────────────────────────┤
 │ Filters Bar [Search, Status, Date Range, Export]     │
 ├──────────────────────────────────────────────────────┤
-│ Data Table (Shadcn Table)                            │
-│ ┌─────┬────────────┬──────────┬─────────┬──────────┐ │
-│ │ □   │ ID         │ Customer │ Status  │ Actions  │ │
-│ ├─────┼────────────┼──────────┼─────────┼──────────┤ │
-│ │ □   │ RFQ-00123  │ Acme Co  │ ●Active │ ⋮        │ │
-│ │ □   │ RFQ-00124  │ Beta Inc │ ●Review │ ⋮        │ │
-│ └─────┴────────────┴──────────┴─────────┴──────────┘ │
+│ Industrial Card                                      │
+│ ┌────────────────────────────────────────────────┐   │
+│ │ ░░░░░░░░░░ TABLE HEADER (bg-slate-50) ░░░░░░░ │   │
+│ ├────────────────────────────────────────────────┤   │
+│ │ Row 1                           hover:bg-slate-50│   │
+│ │────────────────────────────────────────────────│   │
+│ │ Row 2                                          │   │
+│ │────────────────────────────────────────────────│   │
+│ │ Row 3                                          │   │
+│ └────────────────────────────────────────────────┘   │
 ├──────────────────────────────────────────────────────┤
 │ Pagination [Showing 1-20 of 156]  [< 1 2 3 ... 8 >]  │
 └──────────────────────────────────────────────────────┘
@@ -4730,21 +5469,67 @@ const STATUS_CONFIG: Record<string, { color: string; icon: string }> = {
 #### Detail Page Layout
 ```
 ┌──────────────────────────────────────────────────────┐
-│ PageHeader [Back, Title, Status Badge, Actions]      │
+│ PageHeader [← Back, Title, Status Badge, Actions]    │
 ├──────────────────────────────────────────────────────┤
 │ ┌────────────────────────┐ ┌───────────────────────┐ │
-│ │ Main Content           │ │ Sidebar               │ │
+│ │ Main Content (2/3)     │ │ Sidebar (1/3)         │ │
 │ │ ┌────────────────────┐ │ │ ┌─────────────────────┐│ │
-│ │ │ Section: Items     │ │ │ │ Timeline            ││ │
-│ │ └────────────────────┘ │ │ │ - Created           ││ │
-│ │ ┌────────────────────┐ │ │ │ - Reviewed          ││ │
-│ │ │ Section: Docs      │ │ │ │ - Approved          ││ │
+│ │ │ Industrial Card    │ │ │ │ Audit Timeline      ││ │
+│ │ │ Section: Items     │ │ │ │ - font-mono times   ││ │
+│ │ └────────────────────┘ │ │ │ - actor avatars     ││ │
+│ │ ┌────────────────────┐ │ │ └─────────────────────┘│ │
+│ │ │ Industrial Card    │ │ │ ┌─────────────────────┐│ │
+│ │ │ Section: Documents │ │ │ │ Quick Actions       ││ │
 │ │ └────────────────────┘ │ │ └─────────────────────┘│ │
-│ └────────────────────────┘ │ ┌─────────────────────┐│ │
-│                            │ │ Quick Actions       ││ │
-│                            │ └─────────────────────┘│ │
-│                            └───────────────────────┘ │
+│ └────────────────────────┘ └───────────────────────┘ │
 └──────────────────────────────────────────────────────┘
+```
+
+---
+
+### Snapshot Integrity Pattern
+
+```typescript
+// hooks/useAuditLog.ts
+
+/**
+ * SNAPSHOT INTEGRITY RULE:
+ * When a status changes, log it in an Audit Trail UI component using:
+ * 1. font-mono timestamp (ISO 8601 format)
+ * 2. Actor avatar
+ * 3. Previous and new state
+ * 4. Optional reason/comments
+ */
+
+interface StatusChangeEvent {
+  entityType: 'RFQ_ITEM' | 'ORDER_ITEM';
+  entityId: string;
+  previousStatus: string;
+  newStatus: string;
+  actorId: string;
+  timestamp: Date;
+  reason?: string;
+  metadata?: Record<string, any>;
+}
+
+async function logStatusChange(event: StatusChangeEvent): Promise<void> {
+  await db.auditLog.create({
+    data: {
+      entity_type: event.entityType,
+      entity_id: event.entityId,
+      action: 'STATUS_CHANGE',
+      previous_value: { status: event.previousStatus },
+      new_value: { status: event.newStatus },
+      performed_by: event.actorId,
+      performed_at: event.timestamp.toISOString(),
+      reason: event.reason,
+      metadata: event.metadata,
+    },
+  });
+  
+  // Trigger real-time update to Audit Trail UI component
+  await pusher.trigger(`entity-${event.entityId}`, 'audit-update', event);
+}
 ```
 
 ---
