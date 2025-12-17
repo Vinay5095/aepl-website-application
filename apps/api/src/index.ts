@@ -16,6 +16,7 @@ import stateTransitionRoutes from './routes/state-transition';
 import customerRoutes from './routes/customer';
 import vendorRoutes from './routes/vendor';
 import productRoutes from './routes/product';
+import rfqRoutes from './routes/rfq';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -78,9 +79,9 @@ app.use(`/api/${API_VERSION}`, stateTransitionRoutes);
 app.use(`/api/${API_VERSION}`, customerRoutes);
 app.use(`/api/${API_VERSION}`, vendorRoutes);
 app.use(`/api/${API_VERSION}`, productRoutes);
+app.use(`/api/${API_VERSION}/rfq`, rfqRoutes);
 
-// TODO: Add RFQ and Order routes
-// app.use(`/api/${API_VERSION}/rfq`, rfqRoutes);
+// TODO: Add Order routes
 // app.use(`/api/${API_VERSION}/orders`, orderRoutes);
 
 /**
