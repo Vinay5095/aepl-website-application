@@ -28,6 +28,7 @@ import revisionRoutes from './routes/revision';
 import quantityFulfillmentRoutes from './routes/quantity-fulfillment';
 import rmaRoutes from './routes/rma';
 import commercialTermsRoutes from './routes/commercial-terms';
+import vendorIntelligenceRoutes from './routes/vendor-intelligence';
 
 // Services
 import { startSlaMonitoringCron } from './services/sla-cron';
@@ -108,6 +109,7 @@ app.use(`/api/${API_VERSION}`, revisionRoutes);
 app.use(`/api/${API_VERSION}`, quantityFulfillmentRoutes);
 app.use(`/api/${API_VERSION}`, rmaRoutes);
 app.use(`/api/${API_VERSION}`, commercialTermsRoutes);
+app.use(`/api/${API_VERSION}`, vendorIntelligenceRoutes);
 
 /**
  * 404 Handler
