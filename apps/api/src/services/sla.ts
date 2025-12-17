@@ -220,8 +220,15 @@ export async function monitorSlaStatus(organizationId: string): Promise<Monitori
       needsUpdate = true;
       results.breached++;
       
-      // Create breach notification (to be implemented)
-      // await createNotification({...});
+      // Create breach notification
+      const { createSlaBreachNotification } = await import('./sla-escalation');
+      await createSlaBreachNotification(
+        'rfq_item',
+        item.id,
+        organizationId,
+        item.state,
+        status.percentElapsed
+      );
       
     } else if (status.isWarning && !item.slaWarning) {
       updates.slaWarning = true;
@@ -229,8 +236,16 @@ export async function monitorSlaStatus(organizationId: string): Promise<Monitori
       needsUpdate = true;
       results.warned++;
       
-      // Create warning notification (to be implemented)
-      // await createNotification({...});
+      // Create warning notification
+      const { createSlaWarningNotification } = await import('./sla-escalation');
+      await createSlaWarningNotification(
+        'rfq_item',
+        item.id,
+        organizationId,
+        item.state,
+        status.percentElapsed,
+        status.timeRemaining
+      );
     }
     
     if (needsUpdate) {
@@ -291,12 +306,33 @@ export async function monitorSlaStatus(organizationId: string): Promise<Monitori
       needsUpdate = true;
       results.breached++;
       
+      // Create breach notification
+      const { createSlaBreachNotification } = await import('./sla-escalation');
+      await createSlaBreachNotification(
+        'order_item',
+        item.id,
+        organizationId,
+        item.state,
+        status.percentElapsed
+      );
+      
     } else if (status.isWarning && !item.slaWarning) {
       updates.slaWarning = true;
       updates.isAtRisk = true;
       updates.atRiskReason = `Approaching SLA deadline (${status.percentElapsed.toFixed(1)}%)`;
       needsUpdate = true;
       results.warned++;
+      
+      // Create warning notification
+      const { createSlaWarningNotification } = await import('./sla-escalation');
+      await createSlaWarningNotification(
+        'order_item',
+        item.id,
+        organizationId,
+        item.state,
+        status.percentElapsed,
+        status.timeRemaining
+      );
     }
     
     if (needsUpdate) {
