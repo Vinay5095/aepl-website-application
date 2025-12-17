@@ -302,10 +302,45 @@ export async function getAvailableOrderTransitions(
 
 async function executeValidation(type: string, item: any): Promise<boolean> {
   switch (type) {
+    case 'PRODUCT_ACTIVE':
+      const { validateProductActive } = await import('../utils/validators');
+      return await validateProductActive(item.productId);
+    
+    case 'QUANTITY_POSITIVE':
+      const { validateQuantityPositive } = await import('../utils/validators');
+      return validateQuantityPositive(parseFloat(item.quantity));
+    
+    case 'QUANTITY_VALID':
+      const { validateQuantityConstraints } = await import('../utils/validators');
+      return await validateQuantityConstraints(item.productId, parseFloat(item.quantity));
+    
     case 'MARGIN_ACCEPTABLE':
-      return item.marginPct && item.marginPct >= 5;
+      const { validateMarginAcceptable } = await import('../utils/validators');
+      return validateMarginAcceptable(
+        parseFloat(item.sellingPrice || 0),
+        parseFloat(item.vendorPrice || 0)
+      );
+    
     case 'COMMERCIAL_TERMS_COMPLETE':
-      return !!item.commercialTermsId;
+      const { validateCommercialTermsComplete } = await import('../utils/validators');
+      return await validateCommercialTermsComplete(item.commercialTermsId);
+    
+    case 'COMPLIANCE_DATA_COMPLETE':
+      const { validateComplianceDataComplete } = await import('../utils/validators');
+      return await validateComplianceDataComplete(item.complianceDataId);
+    
+    case 'VENDOR_QUOTE_SELECTED':
+      const { validateVendorQuoteSelected } = await import('../utils/validators');
+      return await validateVendorQuoteSelected(item.selectedVendorQuoteId);
+    
+    case 'CREDIT_AVAILABLE':
+      const { validateCreditAvailable } = await import('../utils/validators');
+      return await validateCreditAvailable(
+        item.customerId,
+        item.legalEntityId,
+        parseFloat(item.sellingPrice || 0) * parseFloat(item.quantity)
+      );
+    
     default:
       return true;
   }
@@ -314,14 +349,84 @@ async function executeValidation(type: string, item: any): Promise<boolean> {
 async function executeSideEffect(sideEffect: any, item: any, context: TransitionContext): Promise<Record<string, any>> {
   const updateData: Record<string, any> = {};
   
-  if (sideEffect.type === 'UPDATE' && sideEffect.params) {
-    Object.assign(updateData, sideEffect.params);
-  } else if (sideEffect.type === 'SLA_UPDATE' && sideEffect.params) {
-    const { dueInHours } = sideEffect.params;
-    if (dueInHours) {
-      updateData.slaDueAt = new Date(Date.now() + dueInHours * 60 * 60 * 1000);
-    }
+  switch (sideEffect.type) {
+    case 'UPDATE':
+      if (sideEffect.params) {
+        Object.assign(updateData, sideEffect.params);
+      }
+      break;
+    
+    case 'START_SLA':
+      // Parse duration like "4h", "24h", "2d"
+      if (sideEffect.duration) {
+        const hours = parseSlaHours(sideEffect.duration);
+        updateData.slaDueAt = new Date(Date.now() + hours * 60 * 60 * 1000);
+        updateData.slaWarningAt = new Date(Date.now() + hours * 0.8 * 60 * 60 * 1000); // 80% threshold
+      }
+      break;
+    
+    case 'NOTIFY':
+      // TODO: Integrate with notification service
+      // Queue notifications for each target role
+      if (sideEffect.targets) {
+        // Notification will be queued in notification_queue table
+        // Implementation pending: Notification Engine
+      }
+      break;
+    
+    case 'ASSIGN_OWNER':
+      // TODO: Implement owner assignment
+      // Query users table for available user with specified role
+      // Assign as owner for the item
+      if (sideEffect.role) {
+        // Implementation pending: User assignment logic
+      }
+      break;
+    
+    case 'CREATE_RECORD':
+      // TODO: Implement related record creation
+      // Create related entities like commercial_terms, compliance_data
+      if (sideEffect.entity && sideEffect.data) {
+        // Implementation pending: Related entity creation
+      }
+      break;
+    
+    default:
+      // Unknown side effect type - log warning
+      if (process.env.NODE_ENV !== 'production') {
+        console.warn(`Unknown side effect type: ${sideEffect.type}`);
+      }
   }
   
   return updateData;
+}
+
+/**
+ * Parse SLA duration string to hours
+ * Examples: "2h" => 2, "24h" => 24, "2d" => 48
+ * @throws {AppError} If duration format is invalid
+ */
+function parseSlaHours(duration: string): number {
+  const match = duration.match(/^(\d+)([hd])$/);
+  
+  if (!match) {
+    throw new AppError(
+      400,
+      'INVALID_SLA_DURATION',
+      `Invalid SLA duration format: "${duration}". Expected format: "2h" or "2d"`
+    );
+  }
+  
+  const value = parseInt(match[1]);
+  const unit = match[2];
+  
+  if (value <= 0) {
+    throw new AppError(
+      400,
+      'INVALID_SLA_DURATION',
+      `SLA duration must be positive: "${duration}"`
+    );
+  }
+  
+  return unit === 'h' ? value : value * 24; // 'd' => days to hours
 }

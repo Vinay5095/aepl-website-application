@@ -16,7 +16,7 @@ import {
 } from '../services/customer';
 import { Role } from '@trade-os/types';
 
-const router = Router();
+const router: Router = Router();
 
 /**
  * POST /api/v1/customers

@@ -309,53 +309,18 @@ export async function markFxGainLossPosted(
 
 /**
  * Fetch latest FX rates from external source (RBI/OANDA)
- * NOTE: This is a placeholder - actual implementation would call external APIs
+ * This is now implemented in fx-rate-fetcher.ts
+ * @deprecated Use fetchAndStoreFxRates from fx-rate-fetcher.ts instead
  */
 export async function fetchExternalFxRates(
   organizationId: string,
-  userId: string
+  userId: string,
+  oandaApiKey?: string
 ): Promise<number> {
-  // Placeholder for external API integration
-  // In production, this would call RBI or OANDA APIs
+  // Import the new fetcher service
+  const { fetchAndStoreFxRates } = await import('./fx-rate-fetcher');
   
-  const currencyPairs = [
-    { from: 'USD', to: 'INR' },
-    { from: 'EUR', to: 'INR' },
-    { from: 'GBP', to: 'INR' },
-    { from: 'JPY', to: 'INR' },
-    { from: 'CNY', to: 'INR' },
-  ];
-
-  let updatedCount = 0;
-  const today = new Date().toISOString().split('T')[0];
-
-  // In production, fetch from RBI or OANDA
-  // For now, use placeholder rates
-  const placeholderRates: Record<string, number> = {
-    'USD/INR': 83.25,
-    'EUR/INR': 90.50,
-    'GBP/INR': 105.75,
-    'JPY/INR': 0.56,
-    'CNY/INR': 11.45,
-  };
-
-  for (const pair of currencyPairs) {
-    const key = `${pair.from}/${pair.to}`;
-    const rate = placeholderRates[key];
-
-    if (rate) {
-      await upsertFxRate({
-        fromCurrency: pair.from,
-        toCurrency: pair.to,
-        rate,
-        rateDate: today,
-        source: 'RBI',
-        organizationId,
-        userId,
-      });
-      updatedCount++;
-    }
-  }
-
-  return updatedCount;
+  const result = await fetchAndStoreFxRates(organizationId, userId, oandaApiKey);
+  
+  return result.ratesUpdated;
 }

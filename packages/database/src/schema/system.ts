@@ -255,3 +255,31 @@ export const notificationsRelations = relations(notifications, ({ one }) => ({
     references: [users.id],
   }),
 }));
+
+/**
+ * Tally Sync Queue
+ * Per PRD.md Section 11: Tally Integration via XML/HTTP
+ */
+export const tallySyncQueue = pgTable('tally_sync_queue', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  
+  orgId: uuid('org_id').notNull(),
+  
+  entityType: text('entity_type').notNull(), // INVOICE, PAYMENT, VENDOR_INVOICE, VENDOR_PAYMENT, FX_GAIN_LOSS
+  entityId: text('entity_id').notNull(),
+  
+  voucherType: text('voucher_type').notNull(), // SALES, RECEIPT, PURCHASE, PAYMENT, JOURNAL
+  voucherXml: text('voucher_xml').notNull(),
+  
+  status: text('status').notNull().default('PENDING'), // PENDING, IN_PROGRESS, SUCCESS, FAILED
+  retryCount: integer('retry_count').notNull().default(0),
+  maxRetries: integer('max_retries').notNull().default(5),
+  lastError: text('last_error'),
+  
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  processedAt: timestamp('processed_at', { withTimezone: true }),
+}, (table) => ({
+  statusIdx: index('tally_sync_queue_status_idx').on(table.status),
+  entityIdx: index('tally_sync_queue_entity_idx').on(table.entityType, table.entityId),
+  createdAtIdx: index('tally_sync_queue_created_at_idx').on(table.createdAt),
+}));

@@ -21,7 +21,7 @@ import {
 } from '../services/state-transition';
 import { Role } from '@trade-os/types';
 
-const router = Router();
+const router: Router = Router();
 
 /**
  * Execute RFQ_ITEM state transition

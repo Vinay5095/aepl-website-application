@@ -3,7 +3,7 @@ import { authenticate, authorize } from '../middleware/auth';
 import { notificationService } from '../services/notification';
 import { Role } from '@trade-os/types';
 
-const router = Router();
+const router: Router = Router();
 
 /**
  * GET /api/v1/notifications

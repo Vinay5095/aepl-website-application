@@ -10,7 +10,7 @@ import { Role } from '@trade-os/types';
 import * as fxService from '../services/fx';
 import { AppError } from '../utils/errors';
 
-const router = Router();
+const router: Router = Router();
 
 /**
  * POST /api/v1/fx/convert
@@ -257,16 +257,20 @@ router.post(
   authorize([Role.FINANCE_MANAGER, Role.MD, Role.DIRECTOR, Role.ADMIN]),
   async (req, res, next) => {
     try {
-      const count = await fxService.fetchExternalFxRates(
+      const { triggerManualFetch } = await import('../services/fx-rate-cron');
+      
+      const result = await triggerManualFetch(
         req.user!.organizationId,
-        req.user!.id
+        req.user!.id,
+        process.env.OANDA_API_KEY
       );
 
       res.json({
-        success: true,
+        success: result.success,
         data: {
-          message: `Fetched and updated ${count} FX rates`,
-          count,
+          message: result.message,
+          ratesUpdated: result.ratesUpdated,
+          errors: result.errors,
         },
       });
     } catch (error) {
@@ -274,5 +278,24 @@ router.post(
     }
   }
 );
+
+/**
+ * GET /api/v1/fx/rates/supported-pairs
+ * Get list of supported currency pairs
+ * All authenticated users
+ */
+router.get('/rates/supported-pairs', authenticate, async (req, res, next) => {
+  try {
+    const { getSupportedCurrencyPairs } = await import('../services/fx-rate-fetcher');
+    const pairs = getSupportedCurrencyPairs();
+
+    res.json({
+      success: true,
+      data: pairs,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
 
 export default router;

@@ -8,7 +8,7 @@ import { asyncHandler } from '../middleware/error';
 import { createVendor, getVendorById, listVendors, updateVendor, deleteVendor } from '../services/vendor';
 import { Role } from '@trade-os/types';
 
-const router = Router();
+const router: Router = Router();
 
 router.post('/vendors', authenticate, authorize(Role.MD, Role.DIRECTOR, Role.PURCHASE_MANAGER, Role.ADMIN),
   asyncHandler(async (req: Request, res: Response) => {

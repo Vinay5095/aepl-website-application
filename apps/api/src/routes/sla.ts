@@ -12,7 +12,7 @@ import {
 } from '../services/sla';
 import { Role } from '@trade-os/types';
 
-const router = Router();
+const router: Router = Router();
 
 /**
  * GET /api/v1/sla/at-risk
