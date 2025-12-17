@@ -239,15 +239,19 @@
 - [ ] Integration with Order workflow incomplete
 - [ ] Risk category auto-update incomplete
 
-### 13. FX Engine (60% Complete)
-**File:** `apps/api/src/services/fx.ts`
+### 13. FX Engine (100% Complete) ✅
+**Files:** `apps/api/src/services/fx.ts`, `fx-rate-fetcher.ts`, `fx-rate-cron.ts`
 
 - [x] FX rates table structure
 - [x] Manual rate entry
 - [x] Currency conversion logic
-- [ ] Automated rate fetching (RBI/OANDA) NOT implemented
-- [ ] FX gain/loss calculation incomplete
-- [ ] Multi-currency order handling incomplete
+- [x] Automated rate fetching (RBI/OANDA) IMPLEMENTED
+- [x] FX gain/loss calculation complete
+- [x] Multi-currency order handling complete
+- [x] Daily cron job at 6:00 PM IST
+- [x] Manual trigger endpoint
+- [x] Rate validation and sanity checks
+- [x] 8+ currency pairs supported
 
 ### 14. Tax Engine (60% Complete)
 **File:** `apps/api/src/services/tax.ts`
