@@ -13,6 +13,9 @@ import { errorHandler, notFoundHandler } from './middleware/error';
 // Routes
 import authRoutes from './routes/auth';
 import stateTransitionRoutes from './routes/state-transition';
+import customerRoutes from './routes/customer';
+import vendorRoutes from './routes/vendor';
+import productRoutes from './routes/product';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -72,13 +75,13 @@ app.get('/health', (req, res) => {
  */
 app.use(`/api/${API_VERSION}/auth`, authRoutes);
 app.use(`/api/${API_VERSION}`, stateTransitionRoutes);
+app.use(`/api/${API_VERSION}`, customerRoutes);
+app.use(`/api/${API_VERSION}`, vendorRoutes);
+app.use(`/api/${API_VERSION}`, productRoutes);
 
-// TODO: Add more routes
+// TODO: Add RFQ and Order routes
 // app.use(`/api/${API_VERSION}/rfq`, rfqRoutes);
 // app.use(`/api/${API_VERSION}/orders`, orderRoutes);
-// app.use(`/api/${API_VERSION}/customers`, customerRoutes);
-// app.use(`/api/${API_VERSION}/vendors`, vendorRoutes);
-// app.use(`/api/${API_VERSION}/products`, productRoutes);
 
 /**
  * 404 Handler
