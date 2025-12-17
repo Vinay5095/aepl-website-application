@@ -30,6 +30,7 @@ import rmaRoutes from './routes/rma';
 import commercialTermsRoutes from './routes/commercial-terms';
 import vendorIntelligenceRoutes from './routes/vendor-intelligence';
 import exceptionRiskRoutes from './routes/exception-risk';
+import humanErrorGuardrailRoutes from './routes/human-error-guardrail';
 
 // Services
 import { startSlaMonitoringCron } from './services/sla-cron';
@@ -112,6 +113,7 @@ app.use(`/api/${API_VERSION}`, rmaRoutes);
 app.use(`/api/${API_VERSION}`, commercialTermsRoutes);
 app.use(`/api/${API_VERSION}`, vendorIntelligenceRoutes);
 app.use(`/api/${API_VERSION}`, exceptionRiskRoutes);
+app.use(`/api/${API_VERSION}`, humanErrorGuardrailRoutes);
 
 /**
  * 404 Handler
