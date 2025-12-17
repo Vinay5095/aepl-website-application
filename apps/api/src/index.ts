@@ -18,6 +18,10 @@ import vendorRoutes from './routes/vendor';
 import productRoutes from './routes/product';
 import rfqRoutes from './routes/rfq';
 import orderRoutes from './routes/order';
+import slaRoutes from './routes/sla';
+
+// Services
+import { startSlaMonitoringCron } from './services/sla-cron';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -82,6 +86,7 @@ app.use(`/api/${API_VERSION}`, vendorRoutes);
 app.use(`/api/${API_VERSION}`, productRoutes);
 app.use(`/api/${API_VERSION}/rfq`, rfqRoutes);
 app.use(`/api/${API_VERSION}/orders`, orderRoutes);
+app.use(`/api/${API_VERSION}/sla`, slaRoutes);
 
 /**
  * 404 Handler
@@ -106,6 +111,9 @@ app.listen(PORT, () => {
   console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`📅 Started at: ${new Date().toISOString()}`);
   console.log('='.repeat(60));
+  
+  // Start SLA monitoring cron job
+  startSlaMonitoringCron();
 });
 
 // Graceful shutdown
