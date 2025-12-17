@@ -4,7 +4,7 @@ import { asyncHandler } from '../middleware/error';
 import { Role } from '@trade-os/types';
 import * as rfqService from '../services/rfq';
 
-const router = Router();
+const router: Router = Router();
 
 /**
  * POST /api/v1/rfq

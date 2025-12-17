@@ -10,7 +10,7 @@ import { Role } from '@trade-os/types';
 import * as taxService from '../services/tax';
 import { AppError } from '../utils/errors';
 
-const router = Router();
+const router: Router = Router();
 
 /**
  * POST /api/v1/tax/customs-duty/calculate

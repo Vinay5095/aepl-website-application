@@ -10,7 +10,7 @@ import { Role } from '@trade-os/types';
 import * as fxService from '../services/fx';
 import { AppError } from '../utils/errors';
 
-const router = Router();
+const router: Router = Router();
 
 /**
  * POST /api/v1/fx/convert

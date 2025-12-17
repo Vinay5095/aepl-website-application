@@ -15,7 +15,7 @@ import {
 } from '../services/credit';
 import { Role } from '@trade-os/types';
 
-const router = Router();
+const router: Router = Router();
 
 /**
  * POST /api/v1/credit/check
