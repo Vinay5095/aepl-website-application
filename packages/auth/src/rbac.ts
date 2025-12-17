@@ -247,6 +247,109 @@ export function getRfqItemFieldVisibility(role: Role): FieldVisibility {
 }
 
 /**
+ * Get visible fields for a role on Order items
+ */
+export function getOrderItemFieldVisibility(role: Role): FieldVisibility {
+  const baseFields = {
+    id: true,
+    orderId: true,
+    itemNumber: true,
+    productId: true,
+    productName: true,
+    specifications: true,
+    quantity: true,
+    unit: true,
+    state: true,
+    deliveryAddress: true,
+    deliveryTimeline: true,
+    technicalSpecs: true,
+  };
+
+  // Sales can see selling pricing
+  const salesFields = {
+    ...baseFields,
+    sellingPrice: true,
+    sellingCurrency: true,
+    customerPo: true,
+    marginPct: true,
+  };
+
+  // Purchase can see purchase pricing
+  const purchaseFields = {
+    ...baseFields,
+    purchasePrice: true,
+    purchaseCurrency: true,
+    vendorPrice: true,
+    vendorCurrency: true,
+    poNumber: true,
+  };
+
+  // Logistics can see shipping details
+  const logisticsFields = {
+    ...baseFields,
+    deliveryAddress: true,
+    shipmentDetails: true,
+    trackingNumber: true,
+  };
+
+  // QC can see quality details
+  const qcFields = {
+    ...baseFields,
+    qcStatus: true,
+    qcRemarks: true,
+    inspectionDate: true,
+  };
+
+  // Finance sees all pricing
+  const financeFields = {
+    ...baseFields,
+    sellingPrice: true,
+    sellingCurrency: true,
+    purchasePrice: true,
+    purchaseCurrency: true,
+    vendorPrice: true,
+    vendorCurrency: true,
+    marginPct: true,
+    customerPo: true,
+    poNumber: true,
+  };
+
+  // Executives see everything
+  const executiveFields = {
+    ...financeFields,
+    ...logisticsFields,
+    ...qcFields,
+  };
+
+  const roleFieldMap: Record<Role, FieldVisibility> = {
+    [Role.MD]: executiveFields,
+    [Role.DIRECTOR]: executiveFields,
+    [Role.SALES_MANAGER]: salesFields,
+    [Role.SALES_EXECUTIVE]: salesFields,
+    [Role.PURCHASE_MANAGER]: purchaseFields,
+    [Role.SOURCING_ENGINEER]: purchaseFields,
+    [Role.PURCHASE_ENGINEER]: purchaseFields,
+    [Role.FINANCE_MANAGER]: financeFields,
+    [Role.FINANCE_OFFICER]: financeFields,
+    [Role.FINANCE_EXECUTIVE]: financeFields,
+    [Role.TECH_LEAD]: baseFields,
+    [Role.TECH_ENGINEER]: baseFields,
+    [Role.COMPLIANCE_MANAGER]: baseFields,
+    [Role.COMPLIANCE_OFFICER]: baseFields,
+    [Role.QC_MANAGER]: qcFields,
+    [Role.QC_ENGINEER]: qcFields,
+    [Role.WAREHOUSE_MANAGER]: logisticsFields,
+    [Role.WAREHOUSE_EXECUTIVE]: logisticsFields,
+    [Role.LOGISTICS_MANAGER]: logisticsFields,
+    [Role.LOGISTICS_EXECUTIVE]: logisticsFields,
+    [Role.ADMIN]: executiveFields,
+    [Role.SUPER_ADMIN]: executiveFields,
+  };
+
+  return roleFieldMap[role] || baseFields;
+}
+
+/**
  * Filter object fields based on visibility
  */
 export function filterFields<T extends Record<string, any>>(
