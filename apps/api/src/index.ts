@@ -23,11 +23,13 @@ import creditRoutes from './routes/credit';
 import fxRoutes from './routes/fx';
 import taxRoutes from './routes/tax';
 import notificationRoutes from './routes/notification';
+import tallyRoutes from './routes/tally';
 
 // Services
 import { startSlaMonitoringCron } from './services/sla-cron';
 import { startFxRateCron } from './services/fx-rate-cron';
 import { startCreditMonitoringCron } from './services/credit-cron';
+import { startTallySyncCron } from './services/tally-cron';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -97,6 +99,7 @@ app.use(`/api/${API_VERSION}/credit`, creditRoutes);
 app.use(`/api/${API_VERSION}/fx`, fxRoutes);
 app.use(`/api/${API_VERSION}/tax`, taxRoutes);
 app.use(`/api/${API_VERSION}/notifications`, notificationRoutes);
+app.use(`/api/${API_VERSION}/integrations/tally`, tallyRoutes);
 
 /**
  * 404 Handler
@@ -126,8 +129,9 @@ app.listen(PORT, () => {
   startSlaMonitoringCron();
   startFxRateCron();
   startCreditMonitoringCron();
+  startTallySyncCron();
   
-  console.log('⏰ Background jobs started: SLA Monitoring, FX Rate Fetching, Credit Monitoring');
+  console.log('⏰ Background jobs started: SLA Monitoring, FX Rate Fetching, Credit Monitoring, Tally Sync');
   console.log('='.repeat(60));
 });
 
