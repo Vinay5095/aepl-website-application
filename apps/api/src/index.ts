@@ -32,6 +32,7 @@ import vendorIntelligenceRoutes from './routes/vendor-intelligence';
 import exceptionRiskRoutes from './routes/exception-risk';
 import humanErrorGuardrailRoutes from './routes/human-error-guardrail';
 import quantityConstraintRoutes from './routes/quantity-constraint';
+import complianceRegulationRoutes from './routes/compliance-regulation';
 
 // Services
 import { startSlaMonitoringCron } from './services/sla-cron';
@@ -116,6 +117,7 @@ app.use(`/api/${API_VERSION}`, vendorIntelligenceRoutes);
 app.use(`/api/${API_VERSION}`, exceptionRiskRoutes);
 app.use(`/api/${API_VERSION}`, humanErrorGuardrailRoutes);
 app.use(`/api/${API_VERSION}`, quantityConstraintRoutes);
+app.use(`/api/${API_VERSION}`, complianceRegulationRoutes);
 
 /**
  * 404 Handler
