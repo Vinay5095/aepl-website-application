@@ -471,3 +471,6 @@ export const notificationService = {
     });
   },
 };
+
+// Export wrapper functions for backward compatibility
+export const queueNotification = notificationService.createNotification.bind(notificationService);

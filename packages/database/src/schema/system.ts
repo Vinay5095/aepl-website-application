@@ -149,33 +149,6 @@ export const orderItemTax = pgTable('order_item_tax', {
 });
 
 /**
- * Tally Sync Queue
- * Per PRD.md Section 15: External Accounting - Tally Integration
- */
-export const tallySyncQueue = pgTable('tally_sync_queue', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  
-  eventType: text('event_type').notNull(), // INVOICED, PAYMENT_RECEIVED, etc.
-  entityType: text('entity_type').notNull(), // INVOICE, PAYMENT, etc.
-  entityId: uuid('entity_id').notNull(),
-  
-  payload: jsonb('payload').notNull(), // Tally XML payload
-  
-  status: text('status').notNull().default('PENDING'), // PENDING, PROCESSING, SUCCESS, FAILED, RETRY
-  attempts: integer('attempts').notNull().default(0),
-  maxAttempts: integer('max_attempts').notNull().default(5),
-  
-  lastError: text('last_error'),
-  nextRetryAt: timestamp('next_retry_at', { withTimezone: true }),
-  
-  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
-  completedAt: timestamp('completed_at', { withTimezone: true }),
-}, (table) => ({
-  statusIdx: index('tally_sync_queue_status_idx').on(table.status),
-  nextRetryIdx: index('tally_sync_queue_next_retry_idx').on(table.nextRetryAt),
-}));
-
-/**
  * Notification Templates
  */
 export const notificationTemplates = pgTable('notification_templates', {

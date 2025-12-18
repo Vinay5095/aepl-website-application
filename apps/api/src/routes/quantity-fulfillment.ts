@@ -15,7 +15,7 @@ import {
   reconcileQuantities,
 } from '../services/quantity-fulfillment';
 
-const router = Router();
+const router: Router = Router();
 
 // All routes require authentication
 router.use(authenticate);

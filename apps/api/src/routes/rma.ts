@@ -16,7 +16,7 @@ import {
 } from '../services/rma';
 import { Role } from '@trade-os/types';
 
-const router = Router();
+const router: Router = Router();
 
 // All routes require authentication
 router.use(authenticate);
