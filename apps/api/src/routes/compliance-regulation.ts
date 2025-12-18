@@ -12,7 +12,7 @@ import {
   checkExportLicenseRequired,
 } from '../services/compliance-regulation';
 
-const router = Router();
+const router: Router = Router();
 
 // All routes require authentication
 router.use(authenticate);

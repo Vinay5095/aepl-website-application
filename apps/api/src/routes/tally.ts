@@ -5,7 +5,7 @@
  */
 
 import { Router } from 'express';
-import { authenticate } from '../middleware/authenticate';
+import { authenticate } from '../middleware/auth';
 import { authorize } from '../middleware/authorize';
 import { 
   syncInvoiceToTally, 

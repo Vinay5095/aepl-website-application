@@ -17,7 +17,7 @@ import {
   checkRecentErrors,
 } from '../services/human-error-guardrail';
 
-const router = Router();
+const router: Router = Router();
 
 // All routes require authentication
 router.use(authenticate);
